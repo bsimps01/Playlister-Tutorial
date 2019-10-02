@@ -6,8 +6,6 @@ client = MongoClient()
 db = client.Playlister
 playlists = db.playlists
 
-...
-
 app = Flask(__name__)
 
 # @app.route('/')
@@ -23,7 +21,7 @@ app = Flask(__name__)
 @app.route('/')
 def playlists_index():
     """Show all playlists."""
-    return render_template('playlists_index.html', playlists=playlists)
+    return render_template('playlists_index.html', playlists=playlists.find())
 
 @app.route('/playlists/new')
 def playlists_new():
@@ -55,6 +53,6 @@ def playlists_delete(playlist_id):
     """Delete one playlist."""
     playlists.delete_one({'_id': ObjectId(playlist_id)})
     return redirect(url_for('playlists_index'))
-    
+
 if __name__ == '__main__':
     app.run(debug=True)
