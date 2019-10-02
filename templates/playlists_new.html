@@ -2,7 +2,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class='row'>
+        <div class='col-sm-6 col-sm-offset-3'>
 <form method='POST' action='/playlists'>
+    {% include 'partials/playlists_form.html' %}
     <fieldset>
         <legend>New Playlist</legend>
         <!-- TITLE -->
@@ -24,10 +27,13 @@
             <textarea id='playlist-videos' name='videos' rows='10'></textarea>
         </p>
     </fieldset>
-    {% include 'partials/playlists_form.html' %}
     <!-- BUTTON -->
+    <div class='form-group'>
     <p>
-        <button type='submit'>Save Playlist</button>
+            <button class='btn btn-primary' type='submit'>Save Playlist</button>
+        </div>
     </p>
 </form>
+</div>
+</div>
 {% endblock %}
