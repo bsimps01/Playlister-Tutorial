@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
+from datetime import datetime
 
 host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/Playlister')
 client = MongoClient(host=f'{host}?retryWrites=false')
@@ -75,6 +76,26 @@ def playlists_show(playlist_id):
     playlist = playlists.find_one({'_id': ObjectId(playlist_id)})
     playlist_comments = comments.find({'playlist_id': ObjectId(playlist_id)})
     return render_template('playlists_show.html', playlist=playlist, comments=playlist_comments)
+
+@app.route('/playlists/comments/<comment_id>', methods=['POST'])
+def comments_delete(comment_id):
+    """Action to delete a comment."""
+    comment = comments.find_one({'_id': ObjectId(comment_id)})
+    comments.delete_one({'_id': ObjectId(comment_id)})
+    return redirect(url_for('playlists_show', playlist_id=comment.get('playlist_id')))
+
+@app.route('/playlists', methods=['POST'])
+def playlists_submit():
+    """Submit a new playlist."""
+    playlist = {
+        'title': request.form.get('title'),
+        'description': request.form.get('description'),
+        'videos': request.form.get('videos').split(),
+        'created_at': datetime.now()
+    }
+    print(playlist)
+    playlist_id = playlists.insert_one(playlist).inserted_id
+    return redirect(url_for('playlists_show', playlist_id=playlist_id))
 
 if __name__ == '__main__':
   app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT', 5000))
