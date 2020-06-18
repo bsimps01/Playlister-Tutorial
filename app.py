@@ -4,7 +4,7 @@ from bson.objectid import ObjectId
 import os
 from datetime import datetime
 
-host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/Playlister')
+host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/playlister')
 client = MongoClient(host=f'{host}?retryWrites=false')
 db = client.get_default_database()
 playlists = db.playlists
@@ -67,7 +67,7 @@ def comments_new():
         'playlist_id': ObjectId(request.form.get('playlist_id'))
     }
     print(comment)
-    comment_id = comments.insert_one(comment).inserted_id
+    #comment_id = comments.insert_one(comment).inserted_id
     return redirect(url_for('playlists_show', playlist_id=request.form.get('playlist_id')))
 
 @app.route('/playlists/<playlist_id>')
@@ -98,4 +98,4 @@ def playlists_submit():
     return redirect(url_for('playlists_show', playlist_id=playlist_id))
 
 if __name__ == '__main__':
-  app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT', 5000))
+  app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT',5000))
